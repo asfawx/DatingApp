@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { User } from '../../_models/User';
-import { UserService } from '../../_services/user.service';
-import { AlertifyService } from '../../_services/alertify.service';
+
 import {
   NgxGalleryOptions,
   NgxGalleryImage,
@@ -20,11 +19,7 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(
-    private _userService: UserService,
-    private _alertifyService: AlertifyService,
-    private _route: ActivatedRoute
-  ) {}
+  constructor(private _route: ActivatedRoute) {}
 
   ngOnInit() {
     this._route.data.subscribe(data => {
@@ -54,8 +49,8 @@ export class MemberDetailComponent implements OnInit {
         big: this.user.photos[i].url,
         description: this.user.photos[i].description
       });
-
-      return imageUrls;
     }
+
+    return imageUrls;
   }
 }
