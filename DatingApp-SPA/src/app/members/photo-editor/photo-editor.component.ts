@@ -70,6 +70,14 @@ export class PhotoEditorComponent implements OnInit {
         };
 
         this.photos.push(photo);
+        if (photo.isMain) {
+          this._authService.changeMemberPhoto(photo.url);
+          this._authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem(
+            'user',
+            JSON.stringify(this._authService.currentUser)
+          );
+        }
       }
     };
   }
@@ -97,14 +105,21 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   deletePhoto(id: number) {
-    this._alertifyService.confirm('Are you sure you want to delete this photo?', () => {
-      this._userService.deletePhoto(this._authService.decodedToken.nameid, id)
-        .subscribe(() => {
-          this.photos.splice(this.photos.findIndex(p => p.id === id), 1);
-          this._alertifyService.success('Photo has been deleted');
-        }, error => {
-          this._alertifyService.error('Failed to delete the photo');
-        });
-    });
+    this._alertifyService.confirm(
+      'Are you sure you want to delete this photo?',
+      () => {
+        this._userService
+          .deletePhoto(this._authService.decodedToken.nameid, id)
+          .subscribe(
+            () => {
+              this.photos.splice(this.photos.findIndex(p => p.id === id), 1);
+              this._alertifyService.success('Photo has been deleted');
+            },
+            error => {
+              this._alertifyService.error('Failed to delete the photo');
+            }
+          );
+      }
+    );
   }
 }
