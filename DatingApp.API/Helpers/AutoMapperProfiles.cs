@@ -25,12 +25,20 @@ namespace DatingApp.API.Helpers
                     opt.ResolveUsing(d => d.DateOfBirth.CalculateAge());
                 });
             CreateMap<Photo, PhotosForDetailedDto>();
-            CreateMap<Photo, PhotoForReturnDto>();            
+            CreateMap<Photo, PhotoForReturnDto>();   
+            CreateMap<Message, MessageForReturnDto>()
+                .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(
+                    src => src.Sender.Photos.FirstOrDefault(p => p.IsMain).Url
+                ))
+                .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(
+                    src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain).Url
+                ));                         
 
             // Dto to Domain
              CreateMap<UserForUpdateDto, User>();
              CreateMap<PhotoForCreationDto, Photo>();
              CreateMap<UserForRegisterDto, User>();
+             CreateMap<MessageForCreationDto, Message>();
         }
     }
 }
